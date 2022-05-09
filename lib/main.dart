@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
+import 'package:graduation_app/modules/app_cubit/app_states.dart';
 import 'package:graduation_app/modules/home-layout/home-layout.dart';
 import 'package:graduation_app/modules/on_boarding/onBoardingScreen.dart';
 import 'package:graduation_app/network/local/cache_helper.dart';
@@ -51,13 +52,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: lightThem,
-        themeMode: ThemeMode.light,
-        home: OnBoardingScreen(),
+      create: (BuildContext context) => AppCubit()..getCategoryData(),
+      child: BlocConsumer<AppCubit, AppStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: lightThem,
+            themeMode: ThemeMode.light,
+            home: OnBoardingScreen(),
+          );
+        },
       ),
     );
   }

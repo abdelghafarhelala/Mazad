@@ -12,39 +12,11 @@ class CatagoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        // print(data?.message![0]);
+      },
       builder: (context, state) {
-        List<Map<String, dynamic>> list = [
-          {
-            'image':
-                'https://elitetraveler.com/wp-content/uploads/2019/07/Screen-Shot-2019-07-05-at-11.13.50-768x515.png',
-            'name': 'Cars'
-          },
-          {
-            'image':
-                'https://assets.architecturaldigest.in/photos/60084fc951daf9662c149bb9/1:1/w_768,h_768,c_limit/how-to-clean-gadgets-1366x768.jpg',
-            'name': 'Electronics'
-          },
-          {
-            'image':
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4BRmrtbMXfKyJKuV50Nxipt2Pu_zoBslgZQ&usqp=CAU',
-            'name': 'furniture'
-          },
-          {
-            'image':
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQka9DAeXmpzIhJQ0fnzNWTYktG8J6-s5EtHA&usqp=CAU',
-            'name': 'antique'
-          },
-          {
-            'image':
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbNZsGSpfBQ0PohTGCGPKC7A43P_nAvCTDdw&usqp=CAU',
-            'name': 'buildings'
-          },
-          {
-            'image': 'https://vistapointe.net/images/other-wallpaper-16.jpg',
-            'name': 'other'
-          },
-        ];
+        var data = AppCubit.get(context).category;
         return SingleChildScrollView(
           child: Container(
             color: Colors.grey[300],
@@ -57,7 +29,11 @@ class CatagoriesScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
               physics: NeverScrollableScrollPhysics(),
               children: List.generate(
-                  6, (index) => (buildCategoryItem(list, index, context))),
+                  AppCubit.get(context).category!.message!.length,
+                  (index) => (buildCategoryItem(
+                      data?.message?[index],
+                      AppCubit.get(context).category?.message?[index].kind,
+                      context))),
             ),
           ),
         );
@@ -70,7 +46,7 @@ class CatagoriesScreen extends StatelessWidget {
 //         navigateTo(context, ProductsScreen());
 //       },
 // kind image
-Widget buildCategoryItem(List list, index, context) =>
+Widget buildCategoryItem(image, name, context) =>
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       InkWell(
         onTap: () {
@@ -83,7 +59,7 @@ Widget buildCategoryItem(List list, index, context) =>
               // alignment: AlignmentDirectional.bottomEnd,
               children: [
                 Image(
-                  image: NetworkImage(list[index]['image']),
+                  image: NetworkImage('categoryData!.categoryImages'),
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 200,
@@ -91,7 +67,7 @@ Widget buildCategoryItem(List list, index, context) =>
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    list[index]['name'],
+                    name,
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,

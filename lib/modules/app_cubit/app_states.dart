@@ -1,3 +1,5 @@
+import 'package:graduation_app/modules/models/catigoryModel.dart';
+
 abstract class AppStates {}
 
 class AppInitialState extends AppStates {}
@@ -38,6 +40,17 @@ class AppUpLoadProfileLoadingState extends AppStates {}
 class AppUpLoadCoverLoadingState extends AppStates {}
 
 class AppUpdateProfileErrorState extends AppStates {}
+
+// get category
+class AppSuccessCategoryDataState extends AppStates {
+  final CategoryModel model;
+  AppSuccessCategoryDataState(this.model);
+}
+
+class AppErrorCategoryDataState extends AppStates {
+  final String error;
+  AppErrorCategoryDataState(this.error);
+}
 
 //New Post
 class AppPickPostImageSuccessState extends AppStates {}

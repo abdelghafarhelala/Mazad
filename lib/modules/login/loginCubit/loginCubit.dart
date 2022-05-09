@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/login/loginCubit/loginStates.dart';
 import 'package:graduation_app/modules/models/user_model.dart';
+import 'package:graduation_app/network/endPoint/endPoint.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
 
 class AppLoginCubit extends Cubit<AppLoginStates> {
@@ -14,7 +15,7 @@ class AppLoginCubit extends Cubit<AppLoginStates> {
 
   void userLogin({required String email, required String password}) {
     emit(AppLoginLoadingState());
-    DioHelper.postData(url: 'loginRout', data: {
+    DioHelper.postData(url: LOGIN, data: {
       'email': email,
       'password': password,
     }).then((value) {

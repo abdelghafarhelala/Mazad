@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graduation_app/modules/Register/register.dart';
+import 'package:graduation_app/modules/home-layout/home-layout.dart';
 import 'package:graduation_app/modules/login/loginCubit/loginCubit.dart';
 import 'package:graduation_app/modules/login/loginCubit/loginStates.dart';
+import 'package:graduation_app/network/local/cache_helper.dart';
 import 'package:graduation_app/shared/components/components.dart';
+import 'package:graduation_app/shared/consts/consts.dart';
 import 'package:graduation_app/shared/style/color.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,7 +21,20 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => AppLoginCubit(),
       child: BlocConsumer<AppLoginCubit, AppLoginStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is AppLoginSuccessState) {
+            if (state.model!.status!) {
+              CacheHelper.saveData(
+                      key: "token", value: state.model!.data!.token)
+                  .then((value) {
+                token = state.model!.data!.token!;
+                navigateAndFinsh(context, HomeLayout());
+              });
+            } else {
+              showToast(text: state.model!.message, state: ToastStates.error);
+            }
+          }
+        },
         builder: (context, state) {
           return Scaffold(
               // appBar: AppBar(),
@@ -124,7 +140,7 @@ class LoginScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Don\'t have an accout ?'),
+                          Text('Don\'t have an account ?'),
                           TextButton(
                             onPressed: () {
                               navigateTo(context, RegisterScreen());

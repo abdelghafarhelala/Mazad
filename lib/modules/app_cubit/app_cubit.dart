@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/bids/bids.dart';
 import 'package:graduation_app/modules/favorites/favorites.dart';
+import 'package:graduation_app/modules/models/catigoryModel.dart';
 import 'package:graduation_app/modules/new_post/new_post.dart';
 import 'package:graduation_app/modules/profile/profile.dart';
+import 'package:graduation_app/network/endPoint/endPoint.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../catagories/catigories.dart';
@@ -66,21 +68,34 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  File? coverImage;
-  Future<void> getCoverImage() async {
-    final pickerFile = await picker.pickImage(source: ImageSource.gallery);
+  // File? coverImage;
+  // Future<void> getCoverImage() async {
+  //   final pickerFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickerFile != null) {
-      coverImage = File(pickerFile.path);
-      emit(AppPickCoverImageSuccessState());
-    } else {
-      print('No Image Selected');
-      emit(AppPickCoverImageErrorState());
-    }
-  }
+  //   if (pickerFile != null) {
+  //     coverImage = File(pickerFile.path);
+  //     emit(AppPickCoverImageSuccessState());
+  //   } else {
+  //     print('No Image Selected');
+  //     emit(AppPickCoverImageErrorState());
+  //   }
+  // }
 
-  String profileImageUrl = '';
-  void getData() {
-    DioHelper.postData(url: 'loginRout', data: {"email": ''});
+  // String profileImageUrl = '';
+  // void getData() {
+  //   DioHelper.postData(url: 'loginRout', data: {"email": ''});
+  // }
+
+  CategoryModel? category;
+  void getCategoryData() {
+    DioHelper.getData(url: CATEGORY).then((value) {
+      category = CategoryModel.fromJson(value.data);
+      print(category?.message?[1].kind);
+      print(category?.message?[0].categoryImages);
+      emit(AppSuccessCategoryDataState(category!));
+    }).catchError((error) {
+      emit(AppErrorCategoryDataState(error.toString()));
+      print(error.toString());
+    });
   }
 }
