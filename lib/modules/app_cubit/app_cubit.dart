@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/bids/bids.dart';
 import 'package:graduation_app/modules/favorites/favorites.dart';
 import 'package:graduation_app/modules/models/catigoryModel.dart';
+import 'package:graduation_app/modules/models/productModel.dart';
 import 'package:graduation_app/modules/new_post/new_post.dart';
 import 'package:graduation_app/modules/profile/profile.dart';
 import 'package:graduation_app/network/endPoint/endPoint.dart';
@@ -95,6 +96,19 @@ class AppCubit extends Cubit<AppStates> {
       emit(AppSuccessCategoryDataState(category!));
     }).catchError((error) {
       emit(AppErrorCategoryDataState(error.toString()));
+      print(error.toString());
+    });
+  }
+
+  GetAllProducts? product;
+  void getAllProducts() {
+    DioHelper.getData(url: GETPRODUCTS).then((value) {
+      product = GetAllProducts.fromJson(value.data);
+      print(product?.message?[1].id);
+      print(product?.message?[0].newPrice);
+      emit(AppGetAllProductsSuccessState());
+    }).catchError((error) {
+      emit(AppGetAllProductsErrorState(error.toString()));
       print(error.toString());
     });
   }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
+import 'package:graduation_app/modules/models/productModel.dart';
 import 'package:graduation_app/modules/product_data/product_data.dart';
 import 'package:graduation_app/shared/components/components.dart';
 
@@ -30,6 +31,8 @@ class ProductsScreen extends StatelessWidget {
         //   }
       },
       builder: (context, state) {
+        GetAllProducts? data = AppCubit.get(context).product;
+
         final List<String> imgList = [
           'https://apollo-ireland.akamaized.net/v1/files/7n9f417r4gpc2-EG/image;s=644x461;olx-st/_1_.jpg',
           'https://apollo-ireland.akamaized.net/v1/files/qoapr8rg9t83-EG/image;s=644x461;olx-st/_3_.jpg',
@@ -43,7 +46,7 @@ class ProductsScreen extends StatelessWidget {
           body: Center(
             child: ConditionalBuilder(
               condition: true,
-              builder: (context) => buildProduct(context, imgList, myMap),
+              builder: (context) => buildProduct(data, context, imgList, myMap),
               // ignore: prefer_const_constructors
               fallback: (context) => Center(child: CircularProgressIndicator()),
             ),
@@ -54,7 +57,7 @@ class ProductsScreen extends StatelessWidget {
   }
 
   // HomeModel model,CategoriesModel category
-  Widget buildProduct(context, List imgList, Map myMap) =>
+  Widget buildProduct(GetAllProducts? data, context, List imgList, Map myMap) =>
       SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,15 +124,16 @@ class ProductsScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                 physics: NeverScrollableScrollPhysics(),
                 children: List.generate(
-                  10,
-                  (index) => buildProductItem(myMap, context),
+                  AppCubit.get(context).product!.message!.length,
+                  (index) =>
+                      buildProductItem(data!.message![index], myMap, context),
                 ),
               ),
             )
           ],
         ),
       );
-  Widget buildProductItem(Map myMap, context) => InkWell(
+  Widget buildProductItem(Message products, Map myMap, context) => InkWell(
         onTap: () {
           navigateTo(context, ProductDataScreen());
         },
@@ -158,7 +162,7 @@ class ProductsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      myMap['name'],
+                      products.pName ?? '',
                       style: TextStyle(fontSize: 14, height: 1.3),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
