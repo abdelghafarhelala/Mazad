@@ -52,6 +52,14 @@ class AppErrorCategoryDataState extends AppStates {
   AppErrorCategoryDataState(this.error);
 }
 
+// get all products
+class AppGetAllProductsSuccessState extends AppStates {}
+
+class AppGetAllProductsErrorState extends AppStates {
+  final String error;
+  AppGetAllProductsErrorState(this.error);
+}
+
 //New Post
 class AppPickPostImageSuccessState extends AppStates {}
 
