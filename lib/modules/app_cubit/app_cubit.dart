@@ -3,14 +3,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_app/models/catigoryModel.dart';
+import 'package:graduation_app/models/productDataModel.dart';
+import 'package:graduation_app/models/productModel.dart';
 import 'package:graduation_app/modules/bids/bids.dart';
 import 'package:graduation_app/modules/favorites/favorites.dart';
-import 'package:graduation_app/modules/models/catigoryModel.dart';
-import 'package:graduation_app/modules/models/productModel.dart';
+
 import 'package:graduation_app/modules/new_post/new_post.dart';
 import 'package:graduation_app/modules/profile/profile.dart';
 import 'package:graduation_app/network/endPoint/endPoint.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
+import 'package:graduation_app/shared/consts/consts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../catagories/catigories.dart';
 import 'app_states.dart';
@@ -89,7 +92,7 @@ class AppCubit extends Cubit<AppStates> {
 
   CategoryModel? category;
   void getCategoryData() {
-    DioHelper.getData(url: CATEGORY).then((value) {
+    DioHelper.getDataWithoutToken(url: CATEGORY).then((value) {
       category = CategoryModel.fromJson(value.data);
       print(category?.message?[1].kind);
       print(category?.message?[0].categoryImages);
@@ -100,15 +103,31 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  GetAllProducts? product;
+  ProductModel? product;
   void getAllProducts() {
-    DioHelper.getData(url: GETPRODUCTS).then((value) {
-      product = GetAllProducts.fromJson(value.data);
+    emit(AppGetAllProductsLoadingState());
+    DioHelper.getData(url: GETPRODUCTS, token: token).then((value) {
+      product = ProductModel.fromJson(value.data);
       print(product?.message?[1].id);
       print(product?.message?[0].newPrice);
       emit(AppGetAllProductsSuccessState());
     }).catchError((error) {
       emit(AppGetAllProductsErrorState(error.toString()));
+      print(error.toString());
+    });
+  }
+
+  ProductDataModel? productdata;
+  void getProductData({required int id}){
+    emit(AppGetProductDataLoadingState());
+    DioHelper.postData(
+        url: GETPRODUCTDATA,
+        token: token,
+        data: {'id': id.toString()}).then((value) {
+      productdata = ProductDataModel.fromJson(value.data);
+      emit(AppGetProductDataSuccessState());
+    }).catchError((error) {
+      emit(AppGetProductDataErrorState());
       print(error.toString());
     });
   }

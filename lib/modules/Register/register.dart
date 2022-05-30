@@ -186,7 +186,6 @@ class RegisterScreen extends StatelessWidget {
                         },
                         text: 'Sign up',
                         isUpper: true,
-                        color: defaultColor,
                       ),
                       SizedBox(
                         height: 10,

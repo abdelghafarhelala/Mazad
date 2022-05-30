@@ -1,23 +1,23 @@
-class GetAllProducts {
+class ProductModel {
   bool? status;
-  List<Message>? message;
+  List<Products>? message;
   String? data;
 
-  GetAllProducts({this.status, this.message, this.data});
+  ProductModel({this.status, this.message, this.data});
 
-  GetAllProducts.fromJson(Map<String, dynamic> json) {
+  ProductModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['message'] != null) {
-      message = <Message>[];
+      message = <Products>[];
       json['message'].forEach((v) {
-        message!.add(Message.fromJson(v));
+        message!.add(Products.fromJson(v));
       });
     }
     data = json['data'];
   }
 }
 
-class Message {
+class Products {
   int? id;
   String? pName;
   String? description;
@@ -31,7 +31,7 @@ class Message {
   String? createdAt;
   String? updatedAt;
 
-  Message(
+  Products(
       {this.id,
       this.pName,
       this.description,
@@ -45,7 +45,7 @@ class Message {
       this.createdAt,
       this.updatedAt});
 
-  Message.fromJson(Map<String, dynamic> json) {
+  Products.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     pName = json['p_name'];
     description = json['description'];

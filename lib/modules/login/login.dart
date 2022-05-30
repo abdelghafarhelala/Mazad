@@ -97,17 +97,17 @@ class LoginScreen extends StatelessWidget {
                         height: 30,
                       ),
                       defaultButton(
-                          radius: 30.0,
-                          onpress: () {
-                            if (formKey.currentState!.validate()) {
-                              AppLoginCubit.get(context).userLogin(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                            }
-                          },
-                          text: 'LOGIN',
-                          isUpper: true,
-                          color: defaultColor),
+                        radius: 30.0,
+                        onpress: () {
+                          if (formKey.currentState!.validate()) {
+                            AppLoginCubit.get(context).userLogin(
+                                email: emailController.text,
+                                password: passwordController.text);
+                          }
+                        },
+                        text: 'LOGIN',
+                        isUpper: true,
+                      ),
                       SizedBox(
                         height: 20,
                       ),

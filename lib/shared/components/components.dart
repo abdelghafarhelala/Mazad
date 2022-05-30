@@ -3,11 +3,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:graduation_app/shared/style/color.dart';
 
 //abdo
 Widget defaultButton({
   double width = double.infinity,
-  Color color = Colors.blue,
+  // Color color = Colors.blue,
   required Function onpress,
   required String text,
   double radius = 0.0,
@@ -27,7 +28,7 @@ Widget defaultButton({
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),
-        color: color,
+        color: defaultColor,
       ),
     );
 
@@ -37,6 +38,7 @@ Widget defaulttextfield({
   required Function? validate,
   required context,
   IconData? suffix,
+  int? maxLines = 1,
   Function? suffixPressed,
   bool isSecure = false,
   required TextInputType type,
@@ -45,6 +47,7 @@ Widget defaulttextfield({
   // Function? onChange,
 }) =>
     TextFormField(
+      maxLines: maxLines,
       style: Theme.of(context).textTheme.button,
       decoration: InputDecoration(
         labelText: lable,

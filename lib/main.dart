@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
 import 'package:graduation_app/modules/home-layout/home-layout.dart';
-import 'package:graduation_app/modules/on_boarding/onBoardingScreen.dart';
+import 'package:graduation_app/modules/login/login.dart';
 import 'package:graduation_app/network/local/cache_helper.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
 import 'package:graduation_app/shared/blocObserver/blocObserver.dart';
@@ -52,9 +52,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => AppCubit()
-        ..getCategoryData()
-        ..getAllProducts(),
+      create: (BuildContext context) => AppCubit()..getCategoryData(),
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -63,7 +61,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: lightThem,
             themeMode: ThemeMode.light,
-            home: OnBoardingScreen(),
+            home: LoginScreen(),
           );
         },
       ),

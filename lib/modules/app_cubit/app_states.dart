@@ -1,4 +1,4 @@
-import 'package:graduation_app/modules/models/catigoryModel.dart';
+import 'package:graduation_app/models/catigoryModel.dart';
 
 abstract class AppStates {}
 
@@ -53,6 +53,8 @@ class AppErrorCategoryDataState extends AppStates {
 }
 
 // get all products
+class AppGetAllProductsLoadingState extends AppStates {}
+
 class AppGetAllProductsSuccessState extends AppStates {}
 
 class AppGetAllProductsErrorState extends AppStates {
@@ -60,77 +62,9 @@ class AppGetAllProductsErrorState extends AppStates {
   AppGetAllProductsErrorState(this.error);
 }
 
-//New Post
-class AppPickPostImageSuccessState extends AppStates {}
+// get all products
+class AppGetProductDataLoadingState extends AppStates {}
 
-class AppPickPostImageErrorState extends AppStates {}
+class AppGetProductDataSuccessState extends AppStates {}
 
-class AppUpLoadPostImageLoadingState extends AppStates {}
-
-class AppPostImageSuccessState extends AppStates {}
-
-class AppPostImageErrorState extends AppStates {}
-
-class AppAddPostSuccessState extends AppStates {}
-
-class AppAddPostErrorState extends AppStates {}
-
-class AppAddPostLoadingState extends AppStates {}
-
-class RemovePostImageState extends AppStates {}
-
-//get Post
-class AppGetPostLoadingState extends AppStates {}
-
-class AppGetPostSuccessState extends AppStates {}
-
-class AppGetPostErrorState extends AppStates {}
-
-//Like Post
-class AppLikePostSuccessState extends AppStates {}
-
-class AppLikePostErrorState extends AppStates {}
-
-//New Comment
-class AppPickCommentImageSuccessState extends AppStates {}
-
-class AppPickCommentImageErrorState extends AppStates {}
-
-class AppUpLoadCommentImageLoadingState extends AppStates {}
-
-class AppCommentImageSuccessState extends AppStates {}
-
-class AppCommentImageErrorState extends AppStates {}
-
-class AppAddCommentSuccessState extends AppStates {}
-
-class AppAddCommentErrorState extends AppStates {}
-
-class AppAddCommentLoadingState extends AppStates {}
-
-class RemoveCommentImageState extends AppStates {}
-
-//get Post
-class AppGetCommentLoadingState extends AppStates {}
-
-class AppGetCommentSuccessState extends AppStates {}
-
-class AppGetCommentErrorState extends AppStates {}
-
-//Comment Post
-class AppCommentPostSuccessState extends AppStates {}
-
-class AppCommentPostErrorState extends AppStates {}
-
-//Get All Users
-class AppGetAllUsersSuccessState extends AppStates {}
-
-class AppGetAllUsersErrorState extends AppStates {}
-
-//Send Messages
-class AppSendMessagesSuccessState extends AppStates {}
-
-class AppSendMessagesErrorState extends AppStates {}
-
-//Get Messages
-class AppGetMessagesSuccessState extends AppStates {}
+class AppGetProductDataErrorState extends AppStates {}

@@ -1,4 +1,4 @@
-import 'package:graduation_app/modules/models/user_model.dart';
+import 'package:graduation_app/models/user_model.dart';
 
 abstract class AppLoginStates {}
 

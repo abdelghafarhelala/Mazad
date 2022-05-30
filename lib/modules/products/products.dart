@@ -3,12 +3,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_app/models/productModel.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
-import 'package:graduation_app/modules/models/productModel.dart';
 import 'package:graduation_app/modules/product_data/product_data.dart';
 import 'package:graduation_app/shared/components/components.dart';
 
@@ -31,7 +30,7 @@ class ProductsScreen extends StatelessWidget {
         //   }
       },
       builder: (context, state) {
-        GetAllProducts? data = AppCubit.get(context).product;
+        ProductModel? data = AppCubit.get(context).product;
 
         final List<String> imgList = [
           'https://apollo-ireland.akamaized.net/v1/files/7n9f417r4gpc2-EG/image;s=644x461;olx-st/_1_.jpg',
@@ -39,25 +38,33 @@ class ProductsScreen extends StatelessWidget {
           'https://apollo-ireland.akamaized.net/v1/files/a9ex7hkgtasa-EG/image;s=644x461;olx-st/_4_.jpg'
         ];
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Products'),
-          ),
-          body: Center(
-            child: ConditionalBuilder(
-              condition: true,
-              builder: (context) => buildProduct(data, context, imgList, myMap),
-              // ignore: prefer_const_constructors
-              fallback: (context) => Center(child: CircularProgressIndicator()),
-            ),
-          ),
-        );
+        return ConditionalBuilder(
+            condition: state is! AppGetAllProductsLoadingState,
+            fallback: (context) =>
+                const Center(child: CircularProgressIndicator()),
+            builder: (context) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text('Products'),
+                ),
+                body: Center(
+                  child: ConditionalBuilder(
+                    condition: true,
+                    builder: (context) =>
+                        buildProduct(data, context, imgList, myMap),
+                    // ignore: prefer_const_constructors
+                    fallback: (context) =>
+                        Center(child: CircularProgressIndicator()),
+                  ),
+                ),
+              );
+            });
       },
     );
   }
 
   // HomeModel model,CategoriesModel category
-  Widget buildProduct(GetAllProducts? data, context, List imgList, Map myMap) =>
+  Widget buildProduct(ProductModel? data, context, List imgList, Map myMap) =>
       SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +125,7 @@ class ProductsScreen extends StatelessWidget {
               child: GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
-                childAspectRatio: 1 / 1.64,
+                childAspectRatio: 1 / 1.8,
                 mainAxisSpacing: 1,
                 crossAxisSpacing: 1,
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -133,8 +140,9 @@ class ProductsScreen extends StatelessWidget {
           ],
         ),
       );
-  Widget buildProductItem(Message products, Map myMap, context) => InkWell(
+  Widget buildProductItem(Products products, Map myMap, context) => InkWell(
         onTap: () {
+          AppCubit.get(context).getProductData(id: products.id!);
           navigateTo(context, ProductDataScreen());
         },
         child: Card(
@@ -170,36 +178,33 @@ class ProductsScreen extends StatelessWidget {
                     SizedBox(
                       height: 6,
                     ),
-                    Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        Text(
-                          // '${model.price.round()}',
-                          'StartDate: ' + myMap['startDate'],
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.red,
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          // '${model.price.round()}',
-                          'EndDate: ' + myMap['endDate'],
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      // '${model.price.round()}',
+                      'StartDate: ' + products.startDate!,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.red,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      // '${model.price.round()}',
+                      'EndDate: ' + products.endDate!,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.red,
+                      ),
                     ),
                     Row(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
                         Text(
                           // '${model.price.round()}',
-                          'StartPrice: ' + myMap['startPrice'],
+                          'StartPrice: ' + products.oldPrice!.toString(),
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 13,
                             color: Colors.blue,
                           ),
                         ),

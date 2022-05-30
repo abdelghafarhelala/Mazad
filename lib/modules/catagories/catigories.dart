@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
 import 'package:graduation_app/modules/product_data/product_data.dart';
+import 'package:graduation_app/modules/products/products.dart';
 
 import '../../shared/components/components.dart';
 
@@ -50,7 +51,8 @@ Widget buildCategoryItem(image, name, context) =>
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       InkWell(
         onTap: () {
-          navigateTo(context, ProductDataScreen());
+          AppCubit.get(context).getAllProducts();
+          navigateTo(context, ProductsScreen());
         },
         child: Card(
             elevation: 5,

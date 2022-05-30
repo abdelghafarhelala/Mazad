@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_app/models/user_model.dart';
 import 'package:graduation_app/modules/Register/cubit/register_states.dart';
-import 'package:graduation_app/modules/models/user_model.dart';
+
 import 'package:graduation_app/network/endPoint/endPoint.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
 
@@ -22,7 +23,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     required String vodafoneCash,
   }) {
     emit(RegisterLoadingState());
-    DioHelper.postData(url: REGISTER, data: {
+    DioHelper.postDataWithOutToken(url: REGISTER, data: {
       'email': email,
       'password': password,
       'phone': phone,
