@@ -6,6 +6,7 @@ import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
 import 'package:graduation_app/modules/home-layout/home-layout.dart';
 import 'package:graduation_app/modules/login/login.dart';
+import 'package:graduation_app/modules/profile/profile.dart';
 import 'package:graduation_app/network/local/cache_helper.dart';
 import 'package:graduation_app/network/remote/dio_helper.dart';
 import 'package:graduation_app/shared/blocObserver/blocObserver.dart';

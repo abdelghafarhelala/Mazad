@@ -37,6 +37,7 @@ Widget defaulttextfield({
   required IconData prefix,
   required Function? validate,
   required context,
+  bool isEnabled = true,
   IconData? suffix,
   int? maxLines = 1,
   Function? suffixPressed,
@@ -47,6 +48,7 @@ Widget defaulttextfield({
   // Function? onChange,
 }) =>
     TextFormField(
+      enabled: isEnabled,
       maxLines: maxLines,
       style: Theme.of(context).textTheme.button,
       decoration: InputDecoration(
