@@ -32,6 +32,7 @@ dependencies:
   conditional_builder_null_safety: ^0.0.6
   fluttertoast: ^8.0.9
   firebase_auth: ^3.3.9
+  http: ^0.13.4
   bloc: ^8.0.2
   flutter_bloc: ^8.0.1
   cloud_firestore: ^3.1.10
@@ -45,6 +46,22 @@ dependencies:
   smooth_page_indicator: ^1.0.0+2
   table_calendar: ^3.0.4
   syncfusion_flutter_calendar: ^19.4.55
+  hexcolor: ^2.0.7
+  email_validator: ^2.0.1
+  url_launcher: ^6.1.2
+  flutter_social_button: ^1.1.4
+  flutter_switch: ^0.3.2
+  intl: ^0.17.0
+  http_parser: ^4.0.1
+  flutter_native_splash: ^2.2.5
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/logo.png
+  android_12:
+    color: "#FFFFFF"
+  android: true
+  ios: true
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,6 +71,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.9.2"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -75,7 +98,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/icon_mazad.png
+    - assets/images/
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -23,7 +23,7 @@ Widget defaultButton({
         },
         child: Text(
           isUpper ? text.toUpperCase() : text,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white, fontSize: 19),
         ),
       ),
       decoration: BoxDecoration(
@@ -52,9 +52,57 @@ Widget defaulttextfield({
       maxLines: maxLines,
       style: Theme.of(context).textTheme.button,
       decoration: InputDecoration(
+        labelStyle: TextStyle(fontSize: 14, wordSpacing: 0),
         labelText: lable,
-        border: const UnderlineInputBorder(),
+        border: const OutlineInputBorder(),
         prefixIcon: Icon(prefix),
+        suffixIcon: IconButton(
+            icon: Icon(suffix),
+            onPressed: () {
+              suffixPressed!();
+            }),
+      ),
+      keyboardType: type,
+      obscureText: isSecure,
+      validator: (String? s) {
+        return validate!(s);
+      },
+      controller: controller,
+      onTap: () {
+        ontap!();
+      },
+      // onChanged: (String s){
+      //     onChange!(s);
+      // },
+    );
+
+Widget defaulttextfield2({
+  required String lable,
+  required AssetImage prefix,
+  required Function? validate,
+  required context,
+  bool isEnabled = true,
+  IconData? suffix,
+  int? maxLines = 1,
+  Function? suffixPressed,
+  bool isSecure = false,
+  required TextInputType type,
+  var controller,
+  Function? ontap,
+  // Function? onChange,
+}) =>
+    TextFormField(
+      enabled: isEnabled,
+      maxLines: maxLines,
+      style: Theme.of(context).textTheme.button,
+      decoration: InputDecoration(
+        labelStyle: TextStyle(fontSize: 14, wordSpacing: 0),
+        labelText: lable,
+        border: const OutlineInputBorder(),
+        prefixIcon: ImageIcon(
+          prefix,
+          size: 20,
+        ),
         suffixIcon: IconButton(
             icon: Icon(suffix),
             onPressed: () {

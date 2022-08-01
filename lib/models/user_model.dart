@@ -13,8 +13,8 @@ class UserData {
   int? id;
   String? name;
   String? email;
-  int? phone;
-  int? age;
+  String? phone;
+  String? age;
   String? bankAccount;
   String? vodafoneAccount;
   String? token;

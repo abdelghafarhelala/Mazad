@@ -4,7 +4,7 @@ class DioHelper {
   static Dio? dio;
   static init() {
     dio = Dio(BaseOptions(
-      baseUrl: 'https://laravelprojectmazad.000webhostapp.com/api/',
+      baseUrl: 'https://mazad.webautobazaar.com/api/',
       receiveDataWhenStatusError: true,
     ));
   }

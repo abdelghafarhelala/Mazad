@@ -8,39 +8,53 @@ import 'package:graduation_app/modules/app_cubit/app_states.dart';
 import 'package:graduation_app/shared/components/components.dart';
 import 'package:graduation_app/shared/style/color.dart';
 
+var formKey = GlobalKey<FormState>();
+var nameController = TextEditingController();
+var emailController = TextEditingController();
+var phoneController = TextEditingController();
+var ageController = TextEditingController();
+var crditController = TextEditingController();
+var casheController = TextEditingController();
+
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var formKey = GlobalKey<FormState>();
-    var nameController = TextEditingController();
-    var emailController = TextEditingController();
-    var phoneController = TextEditingController();
-    var ageController = TextEditingController();
-    var crditController = TextEditingController();
-    var casheController = TextEditingController();
     return BlocConsumer<AppCubit, AppStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AppUserUpdateSuccessState) {
+          if (state.loginModel.status == "true") {
+            showToast(
+                text: 'Profile Updated Successfully',
+                state: ToastStates.success);
+          } else {
+            showToast(
+                text: 'Can\'t Update Your Profile. Ensure you Choose a Picture',
+                state: ToastStates.error);
+          }
+        }
+      },
       builder: (context, state) {
         var model = AppCubit.get(context).profileModel;
         var isVisable = true;
         if (AppCubit.get(context).profileModel != null) {
-          emailController.text = model!.profileData!.email!;
-          nameController.text = model.profileData!.name!;
-          ageController.text = model.profileData!.age!.toString();
-          phoneController.text = model.profileData!.phone!.toString();
-          if (model.profileData!.bankAccount != null)
-            crditController.text = model.profileData!.bankAccount!;
-          if (model.profileData!.vodafoneAccount != null)
-            casheController.text = model.profileData!.vodafoneAccount!;
+          emailController.text = model!.message!.email!;
+          nameController.text = model.message!.name!;
+          ageController.text = model.message!.age!.toString();
+          phoneController.text = model.message!.phone!.toString();
+          if (model.message!.bankAccount != null)
+            crditController.text = model.message!.bankAccount!;
+          if (model.message!.vodafoneAccount != null)
+            casheController.text = model.message!.vodafoneAccount!;
         }
+        var profileImage = AppCubit.get(context).postImage;
 
         return ConditionalBuilder(
-          condition: state is AppGetUserDataSuccessState,
+          condition: state is! AppGetUserDataLoadingState,
           fallback: (context) => Center(child: CircularProgressIndicator()),
           builder: (context) => SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Form(
                 key: formKey,
                 child: Column(
@@ -48,15 +62,24 @@ class ProfileScreen extends StatelessWidget {
                     Stack(
                       alignment: Alignment.bottomRight,
                       children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcGJegujCz3neLg3btfiVRfmV4dg52BBd38g&usqp=CAU'),
-                        ),
+                        if (profileImage == null)
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(model
+                                    ?.message?.profilePicture ??
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcGJegujCz3neLg3btfiVRfmV4dg52BBd38g&usqp=CAU'),
+                          ),
+                        if (profileImage != null)
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: FileImage(profileImage),
+                          ),
                         CircleAvatar(
                           backgroundColor: Colors.grey[300],
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              AppCubit.get(context).picProfileImage();
+                            },
                             icon: Icon(Icons.camera_alt_sharp),
                             color: Colors.black,
                           ),
@@ -153,7 +176,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     if (AppCubit.get(context)
                             .profileModel!
-                            .profileData!
+                            .message!
                             .bankAccount !=
                         null)
                       defaulttextfield(
@@ -174,7 +197,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     if (AppCubit.get(context)
                             .profileModel!
-                            .profileData!
+                            .message!
                             .vodafoneAccount !=
                         null)
                       defaulttextfield(
@@ -195,20 +218,26 @@ class ProfileScreen extends StatelessWidget {
                       height: 10.0,
                     ),
 
-                    defaultButton(
-                      text: 'Edit profile',
-                      onpress: () {
-                        if (formKey.currentState!.validate()) {
-                          AppCubit.get(context).UpdateUserData(
-                            name: nameController.text,
-                            email: emailController.text,
-                            phone: phoneController.hashCode,
-                            age: ageController.hashCode,
-                            bankAccount: crditController.text,
-                            vodafoneAccount: casheController.text,
-                          );
-                        }
-                      },
+                    ConditionalBuilder(
+                      condition: state is! AppUserUpdateLoadingState,
+                      fallback: (context) =>
+                          Center(child: CircularProgressIndicator()),
+                      builder: (context) => defaultButton(
+                        radius: 10,
+                        text: 'Edit profile',
+                        onpress: () {
+                          if (formKey.currentState!.validate()) {
+                            AppCubit.get(context).postUpdate(
+                              name: nameController.text,
+                              email: emailController.text,
+                              phone: int.parse(phoneController.text),
+                              age: int.parse(ageController.text),
+                              bankAccount: crditController.text,
+                              vodafoneAccount: casheController.text,
+                            );
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),

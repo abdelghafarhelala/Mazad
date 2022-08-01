@@ -21,10 +21,10 @@ class Products {
   int? id;
   String? pName;
   String? description;
-  int? numBids;
-  int? deposite;
-  int? oldPrice;
-  int? newPrice;
+  String? numBids;
+  String? deposite;
+  String? oldPrice;
+  String? newPrice;
   String? startDate;
   String? endDate;
   String? location;

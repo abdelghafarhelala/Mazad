@@ -18,3 +18,5 @@ class AppLoginErrorState extends AppLoginStates {
 }
 
 class AppLoginPasswordShown extends AppLoginStates {}
+
+class PasswordShownState extends AppLoginStates {}

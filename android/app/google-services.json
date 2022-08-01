@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1052577385247",
+    "project_id": "mazad-f8431",
+    "storage_bucket": "mazad-f8431.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052577385247:android:d2936dab66cac849d07e2a",
+        "android_client_info": {
+          "package_name": "com.example.graduation_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052577385247-7lj1b9d51gp65vgj95udijdmf6v2sil8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRZUUa9GTGHTfjMVGeUnISpYtnM46reXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052577385247-7lj1b9d51gp65vgj95udijdmf6v2sil8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

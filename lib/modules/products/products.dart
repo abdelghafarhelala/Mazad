@@ -5,23 +5,21 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_app/models/get_porduct_category.dart';
 import 'package:graduation_app/models/productModel.dart';
 import 'package:graduation_app/modules/app_cubit/app_cubit.dart';
 import 'package:graduation_app/modules/app_cubit/app_states.dart';
+import 'package:graduation_app/modules/favorites/favorites.dart';
 import 'package:graduation_app/modules/product_data/product_data.dart';
+import 'package:graduation_app/modules/search/search_screen.dart';
 import 'package:graduation_app/shared/components/components.dart';
+import 'package:hexcolor/hexcolor.dart';
+
+Color? color = Colors.grey[300];
 
 class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> myMap = {
-      'image':
-          'https://apollo-ireland.akamaized.net/v1/files/7n9f417r4gpc2-EG/image;s=644x461;olx-st/_1_.jpg',
-      'name': 'Mercedes GLC 200',
-      'startPrice': '1 000 000',
-      'startDate': '1-2022',
-      'endDate': '4-2022',
-    };
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {
         // if(state is ShopChangeFavoriteSuccessState)
@@ -30,28 +28,41 @@ class ProductsScreen extends StatelessWidget {
         //   }
       },
       builder: (context, state) {
-        ProductModel? data = AppCubit.get(context).product;
-
+        Data? data = AppCubit.get(context).getProductsInCategoryModel?.data;
+        double ScreenHeight = MediaQuery.of(context).size.height;
+        print('ScreenHeight $ScreenHeight');
+        double ratio = 1.5;
+        if (ScreenHeight <= 700) {
+          ratio = 1.6;
+        }
         final List<String> imgList = [
-          'https://apollo-ireland.akamaized.net/v1/files/7n9f417r4gpc2-EG/image;s=644x461;olx-st/_1_.jpg',
-          'https://apollo-ireland.akamaized.net/v1/files/qoapr8rg9t83-EG/image;s=644x461;olx-st/_3_.jpg',
-          'https://apollo-ireland.akamaized.net/v1/files/a9ex7hkgtasa-EG/image;s=644x461;olx-st/_4_.jpg'
+          'https://img.freepik.com/free-vector/gadgets-auction_1284-22060.jpg?size=626&ext=jpg&uid=R24960600&ga=GA1.2.1634405249.1648830357',
+          'https://img.freepik.com/free-vector/auction-house-abstract-concept-vector-illustration-residential-commercial-property-auction-buy-sell-assets-online-exclusive-bid-consecutive-biddings-business-auctions-abstract-metaphor_335657-4240.jpg?size=338&ext=jpg&uid=R24960600&ga=GA1.2.1634405249.1648830357',
+          'https://img.freepik.com/free-vector/cut-price-bargain-offering-reduced-cost-discount-low-rate-special-promo-scissors-dividing-banknote-crisis-bankruptcy-cheapness-market-vector-isolated-concept-metaphor-illustration_335657-4314.jpg?size=338&ext=jpg&uid=R24960600&ga=GA1.2.1634405249.1648830357'
         ];
 
         return ConditionalBuilder(
-            condition: state is! AppGetAllProductsLoadingState,
+            condition: state is! AppGetProductInCategoryLoadingState,
             fallback: (context) =>
                 const Center(child: CircularProgressIndicator()),
             builder: (context) {
               return Scaffold(
+                // backgroundColor: Colors.grey[200],
                 appBar: AppBar(
-                  title: Text('Products'),
+                  title: Text(data?.kind ?? ''),
+                  actions: [
+                    IconButton(
+                        onPressed: () {
+                          navigateTo(context, SearchScreen(kind: 'product'));
+                        },
+                        icon: Icon(Icons.search))
+                  ],
                 ),
                 body: Center(
                   child: ConditionalBuilder(
-                    condition: true,
+                    condition: state is! AppGetProductInCategoryLoadingState,
                     builder: (context) =>
-                        buildProduct(data, context, imgList, myMap),
+                        buildProduct(data, context, imgList, ratio),
                     // ignore: prefer_const_constructors
                     fallback: (context) =>
                         Center(child: CircularProgressIndicator()),
@@ -64,7 +75,7 @@ class ProductsScreen extends StatelessWidget {
   }
 
   // HomeModel model,CategoriesModel category
-  Widget buildProduct(ProductModel? data, context, List imgList, Map myMap) =>
+  Widget buildProduct(Data? data, context, List imgList, double retio) =>
       SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +94,7 @@ class ProductsScreen extends StatelessWidget {
                     )
                     .toList(),
                 options: CarouselOptions(
-                  height: 250,
+                  height: 180,
                   initialPage: 0,
                   viewportFraction: 1,
                   autoPlay: true,
@@ -107,12 +118,23 @@ class ProductsScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                    'New Products',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'New ',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        ' Products',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: HexColor('#410adf')),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -120,121 +142,185 @@ class ProductsScreen extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Container(
-              color: Colors.grey[300],
-              child: GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                childAspectRatio: 1 / 1.8,
-                mainAxisSpacing: 1,
-                crossAxisSpacing: 1,
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                physics: NeverScrollableScrollPhysics(),
-                children: List.generate(
-                  AppCubit.get(context).product!.message!.length,
-                  (index) =>
-                      buildProductItem(data!.message![index], myMap, context),
+            if (AppCubit.get(context).productCat.length > 0)
+              Container(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  childAspectRatio: 1 / retio,
+                  mainAxisSpacing: 1,
+                  crossAxisSpacing: 1,
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  physics: NeverScrollableScrollPhysics(),
+                  children: List.generate(
+                    AppCubit.get(context).productCat.length,
+                    (index) => buildProductItem(
+                        AppCubit.get(context)
+                            .getProductsInCategoryModel!
+                            .data!
+                            .productcategory![index],
+                        context),
+                  ),
                 ),
               ),
-            )
+            if (AppCubit.get(context).productCat.length == 0) buildNoItems(),
           ],
         ),
       );
-  Widget buildProductItem(Products products, Map myMap, context) => InkWell(
+  Widget buildProductItem(Productcategory products, context) => InkWell(
         onTap: () {
           AppCubit.get(context).getProductData(id: products.id!);
-          navigateTo(context, ProductDataScreen());
+          navigateTo(
+              context,
+              ProductDataScreen(
+                model: products,
+                id: products.id!,
+              ));
         },
         child: Card(
-          elevation: 5,
+          elevation: 8,
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          color: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          // color: Colors.white,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 // color: Colors.red,
-                height: 200,
-                width: 200,
+                height: 120,
+                width: 224,
                 child: Image(
-                  image: NetworkImage(myMap['image']),
-                  height: 200.0,
+                  image: NetworkImage(products.productImages?[0].path ??
+                      'https://img.freepik.com/free-vector/passenger-airplane-isolated_1284-41822.jpg?size=338&ext=jpg&uid=R24960600&ga=GA1.2.1634405249.1648830357'),
+                  height: 120.0,
                   width: 190,
                   // width: double.infinity,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       products.pName ?? '',
-                      style: TextStyle(fontSize: 14, height: 1.3),
-                      maxLines: 2,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(
                       height: 6,
                     ),
-                    Text(
-                      // '${model.price.round()}',
-                      'StartDate: ' + products.startDate!,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.red,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              color: HexColor('#ff1e74'),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  // '${model.price.round()}',
+                                  '  Bids: ' + products.numBids!,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      // '${model.price.round()}',
-                      'EndDate: ' + products.endDate!,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.red,
-                      ),
-                    ),
                     Row(
-                      // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        Text(
-                          // '${model.price.round()}',
-                          'StartPrice: ' + products.oldPrice!.toString(),
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.blue,
+                        Container(
+                          width: 145,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              color: HexColor('#fcc64a'),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  // '${model.price.round()}',
+                                  '  EndDate: ' + products.endDate!,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            // print(model.id);
-                            // ShopCubit.get(context).changeFavorites(model.id);
-                          },
-                          // icon: CircleAvatar(
-                          //     radius: 13,
-                          //     // backgroundColor: ShopCubit.get(context).favorites[model.id] ?Colors.red[400] :Colors.grey[300],
-                          //     child: Icon(
-                          //       Icons.favorite_border,
-                          //       color: Colors.white,
-                          //     ),
-                          //     ),
-
-                          icon: myMap['image'] != ''
-                              ? Icon(
-                                  Icons.favorite,
-                                  size: 20,
-                                  color: Colors.grey[300],
-                                )
-                              : Icon(
-                                  Icons.favorite,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'price',
+                                style: TextStyle(
+                                    fontSize: 17, fontWeight: FontWeight.w500),
+                              ),
+                              // SizedBox(
+                              //   height: 4,
+                              // ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      products.newPrice == 0
+                                          ? '${products.newPrice} EGP'
+                                          : '${products.oldPrice} EGP',
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              AppCubit.get(context)
+                                  .makeFavorite(productId: products.id ?? 1);
+                              // AppCubit.get(context).changeIconColor();
+                              AppCubit.get(context).getFavorites();
+                            },
+                            icon: Icon(
+                              Icons.favorite,
+                              size: 25,
+                              color: AppCubit.get(context)
+                                          .favorites[products.id] ??
+                                      false
+                                  ? Colors.red[400]
+                                  : Colors.grey[300],
+                            ))
                       ],
                     ),
                   ],
